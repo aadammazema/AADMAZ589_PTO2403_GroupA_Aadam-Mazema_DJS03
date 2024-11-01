@@ -37,3 +37,19 @@ After completing the tasks, prepare a brief presentation for your coaching group
 Submit the refactored version of the "Book Connect" application, including all HTML, CSS, and JavaScript files. Ensure that your code is well-documented and adheres to the specified Styleguides. Include a written report covering the discussion and reflection points outlined above.
 
 Make sure to submit your project to the LMS on the DJS03 Project Tab.
+
+
+ESSAY
+
+Enhancing Code Quality Through Refactoring
+
+In software development, maintaining a clean and efficient codebase is essential for long-term success. This presentation explores the improvements made during the refactoring of the a book listing website. 
+
+The original code was functional but had organizational and clarity problems making it hard to follow and understand. I had a hard time simply navigating through the code and trying to understand it. I worked on refactoring and changing the flow of the code by introducing functions such as renderBooks and handleSearch. Each function having a single responsibility making it easier to understand. This modular approach is crucial for ease of navigation. 
+
+Another issue in the original was repetitive logic in the book preview buttons and this was fixed by using the renderBooks function by targeting a list of books to render thus reducing duplication and making it easier to make changes with less chance of errors as well as making the code more elegant. 
+
+The original code cluttered the main body with event listeners, which complicated the overall flow of the application. This was fixed by organizing the event listeners into functions such as handleSearch and loadMoreBooks making the purpose of each one clearer and easier to expand or change in the future. 
+
+I struggled a lot with figuring out and breaking down the original code thus further emphasizing the essentialness of proper code organization and abstraction in order to make the code more readable. By applying this and making the code more modular the code is now more maintainable and is a solid foundation for future development.
+
