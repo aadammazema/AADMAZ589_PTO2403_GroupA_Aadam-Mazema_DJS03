@@ -1,15 +1,6 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
 
 let page = 1;
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.querySelector('[data-settings-theme]').value = 'night'
-    document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
-    document.documentElement.style.setProperty('--color-light', '10, 10, 20');
-} else {
-    document.querySelector('[data-settings-theme]').value = 'day'
-    document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
-    document.documentElement.style.setProperty('--color-light', '255, 255, 255');
-}
 document.querySelector('[data-search-cancel]').addEventListener('click', () => {
     document.querySelector('[data-search-overlay]').open = false
 })
@@ -89,6 +80,9 @@ const populateSelectOptions = (selectElement, options, defaultText) => {
     selectElement.appendChild(fragment);
 };
 
+// Section 4
+// Function to set the theme (light/dark mode)
+const setTheme = (theme) => {
     if (theme === 'night') {
         document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
         document.documentElement.style.setProperty('--color-light', '10, 10, 20');
@@ -162,6 +156,11 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
         <span>Show more</span>
         <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
     `
+// Theme setup
+// Set up initial theme based on user preference
+const preferredTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day';
+setTheme(preferredTheme); // Apply the preferred theme
+document.querySelector('[data-settings-theme]').value = preferredTheme;
 
     window.scrollTo({top: 0, behavior: 'smooth'});
     document.querySelector('[data-search-overlay]').open = false
