@@ -1,8 +1,6 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
 
 let page = 1;
-document.querySelector('[data-list-items]').appendChild(starting)
-
 const genreHtml = document.createDocumentFragment()
 const firstGenreElement = document.createElement('option')
 firstGenreElement.value = 'any'
@@ -42,15 +40,6 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
     document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
     document.documentElement.style.setProperty('--color-light', '255, 255, 255');
 }
-
-document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
-document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
-
-document.querySelector('[data-list-button]').innerHTML = `
-    <span>Show more</span>
-    <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
-`
-
 document.querySelector('[data-search-cancel]').addEventListener('click', () => {
     document.querySelector('[data-search-overlay]').open = false
 })
@@ -99,6 +88,17 @@ document.querySelector('[data-settings-form]').addEventListener('submit', (event
     }
     document.querySelector('[data-list-items]').appendChild(fragment);
     updateShowMoreButton(); // Update the button text after rendering
+};
+// Section 2
+// Function to update the "Show More" button based on remaining books
+const updateShowMoreButton = () => {
+    const remaining = matches.length - (page * BOOKS_PER_PAGE); // Calculate remaining books
+    const button = document.querySelector('[data-list-button]');
+    button.innerHTML = `
+        <span>Show more</span>
+        <span class="list__remaining"> (${remaining > 0 ? remaining : 0})</span>
+    `;
+    button.disabled = remaining <= 0; // Disable button if no more books
 };
 
     if (theme === 'night') {
