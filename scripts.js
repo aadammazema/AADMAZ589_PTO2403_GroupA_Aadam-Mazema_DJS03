@@ -1,17 +1,9 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
 
 let page = 1;
-document.querySelector('[data-search-cancel]').addEventListener('click', () => {
-    document.querySelector('[data-search-overlay]').open = false
-})
 
 document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
     document.querySelector('[data-settings-overlay]').open = false
-})
-
-document.querySelector('[data-header-search]').addEventListener('click', () => {
-    document.querySelector('[data-search-overlay]').open = true 
-    document.querySelector('[data-search-title]').focus()
 })
 
 document.querySelector('[data-header-settings]').addEventListener('click', () => {
@@ -90,35 +82,24 @@ const setTheme = (theme) => {
         document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
         document.documentElement.style.setProperty('--color-light', '255, 255, 255');
     }
+};
+// Section 5
+// Function to handle search
+const handleSearch = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const filters = Object.fromEntries(formData);
+    // Filter books based on genre, title, and author
+    matches = books.filter(book => {
+        const genreMatch = filters.genre === 'any' || book.genres.includes(filters.genre);
+        const titleMatch = filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase());
+        const authorMatch = filters.author === 'any' || book.author === filters.author;
+        return titleMatch && authorMatch && genreMatch;
+    });
     
     document.querySelector('[data-settings-overlay]').open = false
 })
-
-document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
-    event.preventDefault()
-    const formData = new FormData(event.target)
-    const filters = Object.fromEntries(formData)
-    const result = []
-
-    for (const book of books) {
-        let genreMatch = filters.genre === 'any'
-
-        for (const singleGenre of book.genres) {
-            if (genreMatch) break;
-            if (singleGenre === filters.genre) { genreMatch = true }
-        }
-
-        if (
-            (filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase())) && 
-            (filters.author === 'any' || book.author === filters.author) && 
-            genreMatch
-        ) {
-            result.push(book)
-        }
-    }
-
     page = 1;
-    matches = result
 
     if (result.length < 1) {
         document.querySelector('[data-list-message]').classList.add('list__message_show')
@@ -128,6 +109,10 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
 
     document.querySelector('[data-list-items]').innerHTML = ''
     const newItems = document.createDocumentFragment()
+    document.querySelector('[data-list-items]').innerHTML = ''; // Clear current book list
+    renderBooks(matches);
+    document.querySelector('[data-search-overlay]').open = false; // Close overlay
+};
 
     for (const { author, id, image, title } of result.slice(0, BOOKS_PER_PAGE)) {
         const element = document.createElement('button')
