@@ -1,30 +1,6 @@
-import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
+import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
 
 let page = 1;
-let matches = books
-
-const starting = document.createDocumentFragment()
-
-for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
-    const element = document.createElement('button')
-    element.classList = 'preview'
-    element.setAttribute('data-preview', id)
-
-    element.innerHTML = `
-        <img
-            class="preview__image"
-            src="${image}"
-        />
-        
-        <div class="preview__info">
-            <h3 class="preview__title">${title}</h3>
-            <div class="preview__author">${authors[author]}</div>
-        </div>
-    `
-
-    starting.appendChild(element)
-}
-
 document.querySelector('[data-list-items]').appendChild(starting)
 
 const genreHtml = document.createDocumentFragment()
@@ -95,11 +71,35 @@ document.querySelector('[data-header-settings]').addEventListener('click', () =>
 document.querySelector('[data-list-close]').addEventListener('click', () => {
     document.querySelector('[data-list-active]').open = false
 })
+let matches = books;
+
+// Section 1
+// Function to render a list of book previews on the page
+const renderBooks = (bookList) => {
+    const fragment = document.createDocumentFragment();
+    for (const { author, id, image, title } of bookList.slice(0, BOOKS_PER_PAGE)) {
+        const element = document.createElement('button'); // Create a button for each book
+        element.classList = 'preview';
+        element.setAttribute('data-preview', id);
+
+        // Build the button's inner HTML with book details
+        element.innerHTML = ` 
+            <img class="preview__image" src="${image}" />
+            <div class="preview__info">
+                <h3 class="preview__title">${title}</h3>
+                <div class="preview__author">${authors[author]}</div>
+            </div>
+        `;
 
 document.querySelector('[data-settings-form]').addEventListener('submit', (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)
     const { theme } = Object.fromEntries(formData)
+        fragment.appendChild(element);
+    }
+    document.querySelector('[data-list-items]').appendChild(fragment);
+    updateShowMoreButton(); // Update the button text after rendering
+};
 
     if (theme === 'night') {
         document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
