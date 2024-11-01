@@ -97,50 +97,39 @@ const handleSearch = (event) => {
         return titleMatch && authorMatch && genreMatch;
     });
     
-    document.querySelector('[data-settings-overlay]').open = false
-})
     page = 1;
-
-    if (result.length < 1) {
-        document.querySelector('[data-list-message]').classList.add('list__message_show')
-    } else {
-        document.querySelector('[data-list-message]').classList.remove('list__message_show')
-    }
-
-    document.querySelector('[data-list-items]').innerHTML = ''
-    const newItems = document.createDocumentFragment()
     document.querySelector('[data-list-items]').innerHTML = ''; // Clear current book list
     renderBooks(matches);
     document.querySelector('[data-search-overlay]').open = false; // Close overlay
 };
+// Section 6
+// Function to load more books when the button is clicked
+const loadMoreBooks = () => {
+    const fragment = document.createDocumentFragment();
+    for (const { author, id, image, title } of matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE)) {
+        const element = document.createElement('button');
+        element.classList = 'preview';
+        element.setAttribute('data-preview', id); // Set the book ID for preview
 
-    for (const { author, id, image, title } of result.slice(0, BOOKS_PER_PAGE)) {
-        const element = document.createElement('button')
-        element.classList = 'preview'
-        element.setAttribute('data-preview', id)
-    
+         // Build button HTML for each book
         element.innerHTML = `
-            <img
-                class="preview__image"
-                src="${image}"
-            />
-            
+            <img class="preview__image" src="${image}" />
             <div class="preview__info">
                 <h3 class="preview__title">${title}</h3>
                 <div class="preview__author">${authors[author]}</div>
             </div>
         `
+        `;
 
         newItems.appendChild(element)
+        fragment.appendChild(element);
     }
+    document.querySelector('[data-list-items]').appendChild(fragment);
+    page += 1; 
+    updateShowMoreButton(); // Update the button text after loading more
+};
 
-    document.querySelector('[data-list-items]').appendChild(newItems)
-    document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1
 
-    document.querySelector('[data-list-button]').innerHTML = `
-        <span>Show more</span>
-        <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
-    `
 // Theme setup
 // Set up initial theme based on user preference
 const preferredTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day';
