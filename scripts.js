@@ -1,36 +1,6 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
 
 let page = 1;
-const genreHtml = document.createDocumentFragment()
-const firstGenreElement = document.createElement('option')
-firstGenreElement.value = 'any'
-firstGenreElement.innerText = 'All Genres'
-genreHtml.appendChild(firstGenreElement)
-
-for (const [id, name] of Object.entries(genres)) {
-    const element = document.createElement('option')
-    element.value = id
-    element.innerText = name
-    genreHtml.appendChild(element)
-}
-
-document.querySelector('[data-search-genres]').appendChild(genreHtml)
-
-const authorsHtml = document.createDocumentFragment()
-const firstAuthorElement = document.createElement('option')
-firstAuthorElement.value = 'any'
-firstAuthorElement.innerText = 'All Authors'
-authorsHtml.appendChild(firstAuthorElement)
-
-for (const [id, name] of Object.entries(authors)) {
-    const element = document.createElement('option')
-    element.value = id
-    element.innerText = name
-    authorsHtml.appendChild(element)
-}
-
-document.querySelector('[data-search-authors]').appendChild(authorsHtml)
-
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.querySelector('[data-settings-theme]').value = 'night'
     document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
@@ -99,6 +69,24 @@ const updateShowMoreButton = () => {
         <span class="list__remaining"> (${remaining > 0 ? remaining : 0})</span>
     `;
     button.disabled = remaining <= 0; // Disable button if no more books
+};
+// Section 3
+// Function to populate select dropdowns for genres and authors
+const populateSelectOptions = (selectElement, options, defaultText) => {
+    const fragment = document.createDocumentFragment();
+    const firstOption = document.createElement('option'); // Default option
+    firstOption.value = 'any';
+    firstOption.innerText = defaultText;
+    fragment.appendChild(firstOption);
+
+    // Loop through options and create option elements
+    for (const [id, name] of Object.entries(options)) {
+        const option = document.createElement('option');
+        option.value = id;
+        option.innerText = name;
+        fragment.appendChild(option);
+    }
+    selectElement.appendChild(fragment);
 };
 
     if (theme === 'night') {
