@@ -1,18 +1,6 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
 
 let page = 1;
-
-document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
-    document.querySelector('[data-settings-overlay]').open = false
-})
-
-document.querySelector('[data-header-settings]').addEventListener('click', () => {
-    document.querySelector('[data-settings-overlay]').open = true 
-})
-
-document.querySelector('[data-list-close]').addEventListener('click', () => {
-    document.querySelector('[data-list-active]').open = false
-})
 let matches = books;
 
 // Section 1
@@ -33,10 +21,6 @@ const renderBooks = (bookList) => {
             </div>
         `;
 
-document.querySelector('[data-settings-form]').addEventListener('submit', (event) => {
-    event.preventDefault()
-    const formData = new FormData(event.target)
-    const { theme } = Object.fromEntries(formData)
         fragment.appendChild(element);
     }
     document.querySelector('[data-list-items]').appendChild(fragment);
@@ -150,6 +134,11 @@ const handleBookPreview = (event) => {
         document.querySelector('[data-list-description]').innerText = active.description;
     }
 };
+// Section 9
+// Initial render
+renderBooks(matches); // Render the initial list of books
+populateSelectOptions(document.querySelector('[data-search-genres]'), genres, 'All Genres'); // Genre options
+populateSelectOptions(document.querySelector('[data-search-authors]'), authors, 'All Authors'); // Author options 
 
 // Theme setup
 // Set up initial theme based on user preference
@@ -157,15 +146,51 @@ const preferredTheme = window.matchMedia && window.matchMedia('(prefers-color-sc
 setTheme(preferredTheme); // Apply the preferred theme
 document.querySelector('[data-settings-theme]').value = preferredTheme;
 
-    window.scrollTo({top: 0, behavior: 'smooth'});
-    document.querySelector('[data-search-overlay]').open = false
-})
+// Event listeners
 
-document.querySelector('[data-list-button]').addEventListener('click', () => {
-    const fragment = document.createDocumentFragment()
+// Load more books on button click
+document.querySelector('[data-list-button]').addEventListener('click', loadMoreBooks);
+
+// Show book preview on item click
+document.querySelector('[data-list-items]').addEventListener('click', handleBookPreview);
+
+// Handle search form submission
+document.querySelector('[data-search-form]').addEventListener('submit', handleSearch);
 
 
 
+// Closing overlays
+// Close search overlay
+document.querySelector('[data-search-cancel]').addEventListener('click', () => {
+    document.querySelector('[data-search-overlay]').open = false; 
+});
+
+// Close settings overlay
+document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
+    document.querySelector('[data-settings-overlay]').open = false;
+});
+
+// Open search overlay
+document.querySelector('[data-header-search]').addEventListener('click', () => {
+    document.querySelector('[data-search-overlay]').open = true;
+    document.querySelector('[data-search-title]').focus(); // Focus on search input
+});
+
+// Open settings overlay
+document.querySelector('[data-header-settings]').addEventListener('click', () => {
+    document.querySelector('[data-settings-overlay]').open = true;
+});
+
+ // Close the active book detail overlay
+document.querySelector('[data-list-close]').addEventListener('click', () => {
+    document.querySelector('[data-list-active]').open = false;
+});
 
 
-
+document.querySelector('[data-settings-form]').addEventListener('submit', (event) => {
+    event.preventDefault(); // Prevent default form submission
+    const formData = new FormData(event.target); 
+    const { theme } = Object.fromEntries(formData); // Get selected theme
+    setTheme(theme);
+    document.querySelector('[data-settings-overlay]').open = false;  // Close settings overlay
+});
